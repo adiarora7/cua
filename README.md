@@ -28,8 +28,12 @@ No menus. No right-clicking. No "have you tried turning it off and on again." Yo
 
 1. Download **CUA.dmg** from [Releases](https://github.com/adiarora7/cua/releases)
 2. Open the DMG and drag **CUA** to Applications
-3. Right-click CUA.app → **Open** (required first time — app is unsigned)
-4. Grant permissions when prompted: **Screen Recording**, **Accessibility**, **Microphone**
+3. Remove the quarantine flag (app is unsigned):
+   ```bash
+   xattr -cr /Applications/CUA.app
+   ```
+4. Double-click CUA.app to launch
+5. Grant permissions when prompted: **Screen Recording**, **Accessibility**, **Microphone**
 
 A demo API key is bundled — it just works out of the box.
 
