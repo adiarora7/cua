@@ -675,11 +675,11 @@ func executePipeline(
 
 func run() async {
     // API key resolution: environment/.env first, then bundled demo key
-    let bundledKey = "REPLACE_WITH_LIMITED_KEY"
+    let bundledKey = "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"
     let envKeyRaw = getenv("ANTHROPIC_API_KEY")
     let envKey = envKeyRaw.flatMap { String(validatingCString: $0) } ?? ""
     let apiKey = envKey.isEmpty ? bundledKey : envKey
-    guard !apiKey.isEmpty, apiKey != "REPLACE_WITH_LIMITED_KEY" else {
+    guard !apiKey.isEmpty else {
         print("Error: ANTHROPIC_API_KEY not set.")
         print("Add it to .env file or: export ANTHROPIC_API_KEY=your_api_key")
         exit(1)
