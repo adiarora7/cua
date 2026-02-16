@@ -1,0 +1,27 @@
+# Build
+.build/
+
+# Environment & secrets
+.env
+*.env
+.env.*
+
+# Session logs (contain raw API req/res)
+logs/
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Claude Code local settings & memory
+.claude/
+
+# Development notes (personal session logs)
+claudes-daily-notes/
