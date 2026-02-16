@@ -2,6 +2,10 @@
 
 **Talk to your Mac. It does the rest.**
 
+<p align="center">
+  <img src="holdmymouse.gif" alt="Hold My Mouse demo" width="600">
+</p>
+
 Computer use agents exist, but they're built for developers. For hundreds of millions of non-tech-savvy people, there's no product that replicates having a patient, knowledgeable person sitting next to you helping with your laptop. Hold My Mouse is that product.
 
 Just speak naturally, and the agent plans, acts, and narrates what it's doing on your screen.
