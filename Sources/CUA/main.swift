@@ -2307,6 +2307,108 @@ func runTextMode(
     }
 }
 
+// MARK: - Menu Bar
+
+/// Menu bar status item so users can see the app is running and quit it.
+final class MenuBarManager: NSObject {
+    private var statusItem: NSStatusItem?
+
+    @MainActor
+    func setup() {
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        if let button = item.button {
+            button.title = "🖱️"
+            button.toolTip = "Hold My Mouse"
+        }
+
+        let menu = NSMenu()
+        menu.addItem(withTitle: "Hold My Mouse", action: nil, keyEquivalent: "")
+        menu.items.first?.isEnabled = false
+        menu.addItem(.separator())
+
+        let quitItem = NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q")
+        quitItem.target = self
+        menu.addItem(quitItem)
+
+        item.menu = menu
+        self.statusItem = item
+    }
+
+    @objc func quitApp() {
+        exit(0)
+    }
+}
+
+/// Show a welcome window on first launch explaining how to use the app.
+@MainActor
+func showWelcomeWindow() {
+    let width: CGFloat = 420
+    let height: CGFloat = 300
+
+    guard let screen = NSScreen.main else { return }
+    let x = screen.frame.midX - width / 2
+    let y = screen.frame.midY - height / 2
+
+    let win = NSWindow(
+        contentRect: NSRect(x: x, y: y, width: width, height: height),
+        styleMask: [.titled, .closable],
+        backing: .buffered,
+        defer: false
+    )
+    win.title = "Hold My Mouse"
+    win.level = .floating
+    win.isReleasedWhenClosed = false
+
+    let view = NSView(frame: NSRect(x: 0, y: 0, width: width, height: height))
+
+    let title = NSTextField(labelWithString: "Hold My Mouse")
+    title.font = .systemFont(ofSize: 22, weight: .bold)
+    title.frame = NSRect(x: 30, y: height - 55, width: width - 60, height: 30)
+    view.addSubview(title)
+
+    let subtitle = NSTextField(labelWithString: "Talk to your Mac. It does the rest.")
+    subtitle.font = .systemFont(ofSize: 14, weight: .regular)
+    subtitle.textColor = .secondaryLabelColor
+    subtitle.frame = NSRect(x: 30, y: height - 82, width: width - 60, height: 20)
+    view.addSubview(subtitle)
+
+    let instructions = """
+    Just speak naturally — the agent will plan what to do,
+    control your mouse and keyboard, and narrate its actions.
+
+    Voice commands:
+      • Say anything to give a task
+      • "stop" — cancel current action
+      • "quit" — exit the app
+
+    You can also quit from the menu bar icon (🖱️).
+
+    The floating pill at the top of your screen shows
+    what the agent is doing: listening, thinking, or acting.
+    """
+    let body = NSTextField(wrappingLabelWithString: instructions)
+    body.font = .systemFont(ofSize: 12.5)
+    body.frame = NSRect(x: 30, y: 40, width: width - 60, height: height - 130)
+    body.lineBreakMode = .byWordWrapping
+    view.addSubview(body)
+
+    let button = NSButton(title: "Get Started", target: nil, action: #selector(NSWindow.close))
+    button.bezelStyle = .rounded
+    button.controlSize = .large
+    button.frame = NSRect(x: width - 140, y: 12, width: 110, height: 32)
+    button.target = win
+    view.addSubview(button)
+
+    win.contentView = view
+    win.makeKeyAndOrderFront(nil)
+    NSApp.activate(ignoringOtherApps: true)
+
+    // Auto-dismiss after 30 seconds so it doesn't block forever
+    DispatchQueue.main.asyncAfter(deadline: .now() + 30) { [weak win] in
+        win?.close()
+    }
+}
+
 // MARK: - Entry point
 
 loadEnvFile()
@@ -2316,6 +2418,16 @@ loadEnvFile()
 // This is required for AppKit (NSWindow overlay).
 let app = NSApplication.shared
 app.setActivationPolicy(.accessory)  // no dock icon, no menu bar
+
+let menuBar = MenuBarManager()
+
+Task { @MainActor in
+    menuBar.setup()
+    // Show welcome window when launched from Finder (no terminal)
+    if isatty(STDIN_FILENO) == 0 {
+        showWelcomeWindow()
+    }
+}
 
 Task {
     await run()
