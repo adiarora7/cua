@@ -706,7 +706,8 @@ func run() async {
     executor.scaleY = Double(logicalHeight) / Double(height)
     let orchestrator = Orchestrator(client: client, logger: logger)
 
-    let voiceMode = CommandLine.arguments.contains("--voice")
+    // Voice mode: explicit --voice flag, or auto-detect when launched from Finder (no terminal)
+    let voiceMode = CommandLine.arguments.contains("--voice") || isatty(STDIN_FILENO) == 0
     let overlay = OverlayManager()
     screenshotOverlay = overlay
 
