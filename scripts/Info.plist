@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>CUA</string>
+    <key>CFBundleDisplayName</key>
+    <string>CUA - Computer Use Agent</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.adiarora.cua</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleExecutable</key>
+    <string>CUA</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>LSArchitecturePriority</key>
+    <array>
+        <string>arm64</string>
+    </array>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- Privacy usage descriptions (required for macOS permissions) -->
+    <key>NSScreenCaptureUsageDescription</key>
+    <string>CUA needs screen access to see what's on your screen and help you with computer tasks.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>CUA needs microphone access for voice commands so you can talk naturally to control your computer.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>CUA uses speech recognition to understand your voice commands.</string>
+</dict>
+</plist>

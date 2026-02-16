@@ -674,12 +674,19 @@ func executePipeline(
 // MARK: - Main
 
 func run() async {
-    let apiKeyRaw = getenv("ANTHROPIC_API_KEY")
-    let apiKey = apiKeyRaw.flatMap { String(validatingCString: $0) } ?? ""
-    guard !apiKey.isEmpty else {
+    // API key resolution: environment/.env first, then bundled demo key
+    let bundledKey = "REPLACE_WITH_LIMITED_KEY"
+    let envKeyRaw = getenv("ANTHROPIC_API_KEY")
+    let envKey = envKeyRaw.flatMap { String(validatingCString: $0) } ?? ""
+    let apiKey = envKey.isEmpty ? bundledKey : envKey
+    guard !apiKey.isEmpty, apiKey != "REPLACE_WITH_LIMITED_KEY" else {
         print("Error: ANTHROPIC_API_KEY not set.")
         print("Add it to .env file or: export ANTHROPIC_API_KEY=your_api_key")
         exit(1)
+    }
+    if envKey.isEmpty {
+        print("Using bundled demo API key (limited usage).")
+        print("Set ANTHROPIC_API_KEY in your environment to use your own key.")
     }
 
     print("Capturing screen...")
